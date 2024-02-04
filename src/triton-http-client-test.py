@@ -1,5 +1,6 @@
 import numpy as np
 import tritonclient.http as httpclient
+import time  # Importing time module for sleep
 
 try:
     print("Attempting to connect to Triton Inference Server...")
@@ -11,9 +12,6 @@ except Exception as e:
 
 model_name = "simple"
 print(f"Preparing inference request for model '{model_name}'...")
-
-# Assuming the model 'simple' expects two inputs each of shape [16]
-# and you want to send a batch of size 8
 
 # Creating a batch of data with shape [8, 16] for each input tensor
 input0_data = np.random.randint(low=0, high=100, size=(8, 16), dtype=np.int32)
@@ -56,3 +54,8 @@ try:
     print('Output1 Data: ', output1_data)
 except Exception as e:
     print("Inference failed: ", str(e))
+
+# Keep the script running indefinitely to prevent the container from exiting
+print("Script execution completed. Entering infinite sleep to prevent pod from exiting.")
+while True:
+    time.sleep(2073600)  # Sleep for a long time (24 days) before the loop checks again
