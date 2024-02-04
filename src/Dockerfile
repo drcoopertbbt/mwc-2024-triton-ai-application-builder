@@ -20,4 +20,6 @@ RUN useradd -m vscodeuser && \
 # Switch to non-root user
 USER vscodeuser
 
-CMD ["/bin/bash"]
+# Instead of CMD ["/bin/bash"], use a command to keep the container running
+# Use tail to follow an empty file indefinitely
+CMD ["tail", "-f", "/dev/null"]
