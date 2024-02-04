@@ -2,10 +2,10 @@ import numpy as np
 import tritonclient.http as httpclient
 
 try:
-    # Update the URL to use the route exposed by OpenShift
-    triton_client = httpclient.InferenceServerClient(url="http://triton-http-route-edge-inference.apps.nvd-srv-01.nvidia.eng.rdu2.redhat.com", verbose=True)
+    triton_client = httpclient.InferenceServerClient(url="triton-http-route-edge-inference.apps.nvd-srv-01.nvidia.eng.rdu2.redhat.com", verbose=True)
 except Exception as e:
     print("channel creation failed: " + str(e))
+    triton_client = None  # Ensure triton_client is defined to avoid NameError
 
 model_name = "simple"
 
