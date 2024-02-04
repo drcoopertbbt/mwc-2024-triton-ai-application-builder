@@ -1,10 +1,11 @@
 import numpy as np
-import tritonhttpclient
+import tritonclient.http as httpclient
 
 try:
-  triton_client = tritonhttpclient.InferenceServerClient(url="localhost:8000", verbose=True)
+    # Update the URL to use the route exposed by OpenShift
+    triton_client = httpclient.InferenceServerClient(url="http://triton-http-route-edge-inference.apps.nvd-srv-01.nvidia.eng.rdu2.redhat.com", verbose=True)
 except Exception as e:
-  print("channel creation failed: " + str(e))
+    print("channel creation failed: " + str(e))
 
 model_name = "simple"
 
@@ -14,16 +15,18 @@ input0_data = np.arange(start=0, stop=16, dtype=np.int32)
 input1_data = np.ones(shape=(16,), dtype=np.int32)
 
 inputs = []
-inputs.append(tritonhttpclient.InferInput('INPUT0', [16], "INT32"))
-inputs.append(tritonhttpclient.InferInput('INPUT1', [16], "INT32"))
+# Use `httpclient` for creating InferInput objects
+inputs.append(httpclient.InferInput('INPUT0', [16], "INT32"))
+inputs.append(httpclient.InferInput('INPUT1', [16], "INT32"))
 
 # Initialize the data
 inputs[0].set_data_from_numpy(input0_data)
 inputs[1].set_data_from_numpy(input1_data)
 
 outputs = []
-outputs.append(tritonhttpclient.InferRequestedOutput('OUTPUT0'))
-outputs.append(tritonhttpclient.InferRequestedOutput('OUTPUT1'))
+# Use `httpclient` for creating InferRequestedOutput objects
+outputs.append(httpclient.InferRequestedOutput('OUTPUT0'))
+outputs.append(httpclient.InferRequestedOutput('OUTPUT1'))
 
 # Run inference
 results = triton_client.infer(model_name=model_name,
