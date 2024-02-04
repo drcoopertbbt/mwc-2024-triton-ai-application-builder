@@ -1,23 +1,25 @@
 FROM nvcr.io/nvidia/tritonserver:23.05-py3-sdk
 
+# Set work directory
 WORKDIR /app
 
-# Copy your application and the init script
+# Copy your application
 COPY . /app
-COPY init-vscode-server.sh /usr/local/bin/init-vscode-server.sh
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create a non-root user and adjust permissions
-RUN useradd -m vscodeuser && \
-    chown -R vscodeuser:vscodeuser /app && \
-    chmod -R 755 /app && \
-    chmod +x /usr/local/bin/init-vscode-server.sh
+# Adjust permissions to allow for an arbitrary user to run the app and access the necessary directories
+RUN chmod -R 777 /app && \
+    mkdir -p /.vscode-server && \
+    chmod -R 777 /.vscode-server
 
-# Switch to non-root user
-USER vscodeuser
+# Use the init script to adjust permissions and create directories as needed
+COPY init-vscode-server.sh /usr/local/bin/init-vscode-server.sh
+RUN chmod +x /usr/local/bin/init-vscode-server.sh
 
-# Use the init script as the entry point to create /.vscode-server with correct permissions
+# Ensure the container runs as an arbitrary user comfortably
+USER 1000740000
+
 ENTRYPOINT ["/usr/local/bin/init-vscode-server.sh"]
 CMD ["tail", "-f", "/dev/null"]
