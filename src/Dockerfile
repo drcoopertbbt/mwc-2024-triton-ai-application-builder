@@ -1,13 +1,23 @@
 FROM nvcr.io/nvidia/tritonserver:23.05-py3-sdk
 
+# Set work directory
 WORKDIR /app
 
+# Copy your application
 COPY . /app
 
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Create an empty file to tail
-RUN touch /dev/null
+# Create a non-root user and switch to it
+RUN useradd -m vscodeuser && \
+    chown -R vscodeuser:vscodeuser /app && \
+    chmod -R 755 /app && \
+    # Attempt to create the VS Code server directory and adjust permissions
+    mkdir -p /.vscode-server && \
+    chown -R vscodeuser:vscodeuser /.vscode-server
 
-# Use tail to follow the empty file indefinitely
-CMD ["tail", "-f", "/dev/null"]
+# Switch to non-root user
+USER vscodeuser
+
+CMD ["/bin/bash"]
