@@ -1,6 +1,6 @@
 import numpy as np
 import tritonclient.http as httpclient
-import time  # Importing time module for sleep
+import time
 
 try:
     print("Attempting to connect to Triton Inference Server...")
@@ -55,7 +55,6 @@ try:
 except Exception as e:
     print("Inference failed: ", str(e))
 
-# Keep the script running indefinitely to prevent the container from exiting
 print("Script execution completed. Entering infinite sleep to prevent pod from exiting.")
 while True:
-    time.sleep(2073600)  # Sleep for a long time (24 days) before the loop checks again
+    time.sleep(2073600)  # Sleep to prevent the script from exiting
