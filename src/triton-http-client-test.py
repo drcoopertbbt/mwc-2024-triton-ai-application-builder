@@ -5,30 +5,26 @@ try:
     triton_client = httpclient.InferenceServerClient(url="triton-http-route-edge-inference.apps.nvd-srv-01.nvidia.eng.rdu2.redhat.com", verbose=True)
 except Exception as e:
     print("channel creation failed: " + str(e))
-    triton_client = None  # Ensure triton_client is defined to avoid NameError
 
 model_name = "simple"
 
-# Create the data for the two input tensors. Initialize the first
-# to unique integers and the second to all ones.
-input0_data = np.arange(start=0, stop=16, dtype=np.int32)
-input1_data = np.ones(shape=(16,), dtype=np.int32)
+# Adjust the data for the input tensors to comply with the batch size limit
+input0_data = np.arange(start=0, stop=8, dtype=np.int32)  # Adjusted shape [8]
+input1_data = np.ones(shape=(8,), dtype=np.int32)  # Adjusted shape [8]
 
 inputs = []
-# Use `httpclient` for creating InferInput objects
-inputs.append(httpclient.InferInput('INPUT0', [16], "INT32"))
-inputs.append(httpclient.InferInput('INPUT1', [16], "INT32"))
+inputs.append(httpclient.InferInput('INPUT0', [8], "INT32"))  # Adjusted shape [8]
+inputs.append(httpclient.InferInput('INPUT1', [8], "INT32"))  # Adjusted shape [8]
 
 # Initialize the data
 inputs[0].set_data_from_numpy(input0_data)
 inputs[1].set_data_from_numpy(input1_data)
 
 outputs = []
-# Use `httpclient` for creating InferRequestedOutput objects
 outputs.append(httpclient.InferRequestedOutput('OUTPUT0'))
 outputs.append(httpclient.InferRequestedOutput('OUTPUT1'))
 
-# Run inference
+# Run inference with the adjusted batch size
 results = triton_client.infer(model_name=model_name,
                 inputs=inputs,
                 outputs=outputs)
