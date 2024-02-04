@@ -1,25 +1,17 @@
 FROM nvcr.io/nvidia/tritonserver:23.05-py3-sdk
 
-# Set work directory
 WORKDIR /app
 
-# Copy your application
 COPY . /app
+COPY init-vscode-server.sh /usr/local/bin/init-vscode-server.sh
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Create a non-root user and switch to it
-RUN useradd -m vscodeuser && \
-    chown -R vscodeuser:vscodeuser /app && \
+RUN pip install --no-cache-dir -r requirements.txt && \
+    useradd -m vscodeuser && \
+    chown -R vscodeuser:vscodeuser /app /.vscode-server && \
     chmod -R 755 /app && \
-    # Attempt to create the VS Code server directory and adjust permissions
-    mkdir -p /.vscode-server && \
-    chown -R vscodeuser:vscodeuser /.vscode-server
+    chmod +x /usr/local/bin/init-vscode-server.sh
 
-# Switch to non-root user
 USER vscodeuser
 
-# Instead of CMD ["/bin/bash"], use a command to keep the container running
-# Use tail to follow an empty file indefinitely
+ENTRYPOINT ["/usr/local/bin/init-vscode-server.sh"]
 CMD ["tail", "-f", "/dev/null"]
