@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Define where to save the downloaded file
-DOWNLOAD_PATH="/app/model_repository_zip_files/gatortron_s_1.zip"
+DOWNLOAD_PATH="/app/model_repository_zip_files/simple.zip"
 
 # Ensure the script does not attempt operations requiring root privileges
 # Download the file
-if wget -O "${DOWNLOAD_PATH}" https://api.ngc.nvidia.com/v2/models/nvidia/clara/gatortron_s/versions/1/zip; then
+if wget -O "${DOWNLOAD_PATH}" https://github.com/drcoopertbbt/mwc-ngc-simulator/raw/main/model_repository/simple.zip; then
   echo "Download completed successfully."
   # Unzip the file into the model_repository directory
   unzip "${DOWNLOAD_PATH}" -d /app/model_repository
