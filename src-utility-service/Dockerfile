@@ -1,4 +1,4 @@
-FROM registry.redhat.io/ubi8/python-311 AS builder
+FROM registry.redhat.io/ubi8 AS builder
 
 WORKDIR /app
 
