@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# utility-wget-startup.sh
+
 # Define where to save the downloaded file
 DOWNLOAD_PATH="/app/model_repository_zip_files/simple.zip"
 

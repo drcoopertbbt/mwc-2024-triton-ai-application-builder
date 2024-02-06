@@ -4,11 +4,11 @@ FROM registry.redhat.io/ubi8/python-311 as builder
 # Set working directory
 WORKDIR /app
 
-# Copy source code and scripts from the src-utility-service directory
-# Note: Assuming the BuildConfig's contextDir is set to src-utility-service,
-# the COPY command needs to adjust to copy from the current build context
-COPY ./utility-pod-src ./ 
-COPY ./utility-wget-startup.sh ./
+# Copy source code and scripts
+COPY . .
+
+# Debugging: List contents of /app
+RUN ls -la /app/*
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
