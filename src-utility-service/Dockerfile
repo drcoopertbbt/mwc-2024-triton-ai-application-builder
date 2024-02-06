@@ -10,5 +10,5 @@ COPY . .
 # Debugging: List contents of /app
 RUN ls -la /app/*
 
-# Start script on container launch
-CMD ["./utility-wget-startup.sh"]
+# Keep the container running indefinitely to allow `oc rsh` access
+CMD ["tail", "-f", "/dev/null"]
