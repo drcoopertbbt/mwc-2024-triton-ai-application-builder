@@ -10,8 +10,5 @@ COPY . .
 # Debugging: List contents of /app
 RUN ls -la /app/*
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
 # Start script on container launch
 CMD ["./utility-wget-startup.sh"]
