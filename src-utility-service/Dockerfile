@@ -4,19 +4,22 @@ FROM registry.redhat.io/ubi8/python-311 as builder
 # Set working directory
 WORKDIR /app
 
+# As the next commands are to be run as root, we don't switch to non-root user yet.
+
 # Copy source code and scripts
 COPY . .
 
 # Debugging: List contents of /app
 RUN ls -la /app/*
 
-# It's good practice to not run containers as root if not necessary
-# Assume we want to run as UID 1001, but check with your OpenShift cluster for the correct non-root UID
-# Additionally, set the appropriate permissions for the non-root user
-RUN chown -R 1001:0 /app && \
-    chmod -R g=u /app
+# Update permissions for the current user (root at this stage). 
+# This is necessary because when building images without root privileges, 
+# you might not be able to change file ownership with chown. 
+# However, setting read/write/execute permissions might be sufficient 
+# depending on your application's needs.
+RUN chmod -R g=u /app
 
-# Use an unprivileged user to run the application
+# Now switch to user 1001
 USER 1001
 
 # Keep the container running indefinitely to allow `oc rsh` access
