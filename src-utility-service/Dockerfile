@@ -7,9 +7,6 @@ WORKDIR /app
 # Copy source code and scripts
 COPY . .
 
-# Create the directory and set permissions
-RUN mkdir -p /app/model_repository_zip_files && chmod 777 /app/model_repository_zip_files
-
 # Debugging: List contents of /app
 RUN ls -la /app/*
 
