@@ -5,7 +5,13 @@
 # Define where to save the downloaded file
 DOWNLOAD_PATH="/app/model_repository_zip_files/simple.zip"
 
-# Ensure the script does not attempt operations requiring root privileges
+# Check if the directory exists
+if [ -d "/app/model_repository_zip_files" ]; then
+  echo "/app/model_repository_zip_files exists."
+else
+  echo "/app/model_repository_zip_files does not exist."
+fi
+
 # Download the file
 if wget -O "${DOWNLOAD_PATH}" https://github.com/drcoopertbbt/mwc-2024-ngc-models-download-test/raw/main/simple.zip; then
   echo "Download completed successfully."
